@@ -1,0 +1,396 @@
+{
+  "cells": [
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "yZO1hpg0lnn_"
+      },
+      "outputs": [],
+      "source": [
+        "import numpy as np\n",
+        "import pandas as pd\n",
+        "import matplotlib.pyplot as plt\n",
+        "import seaborn as sns\n",
+        "\n",
+        "import warnings\n",
+        "warnings.filterwarnings('ignore')\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "5.write the python code that loads csv file into a Data Frame, splits into test sets, yrains Logistic Regression model and prints accuracy\n"
+      ],
+      "metadata": {
+        "id": "KiXcZTBqOQ4b"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.linear_model import LogisticRegression\n",
+        "from sklearn.metrics import accuracy_score\n",
+        "from sklearn.datasets import load_iris # Example dataset from sklearn\n",
+        "\n",
+        "\n",
+        "iris = load_iris()\n",
+        "df = pd.DataFrame(data=iris.data, columns=iris.feature_names)\n",
+        "df['target'] = iris.target\n",
+        "\n",
+        "\n",
+        "X = df.drop('target', axis=1)\n",
+        "y = df['target']\n",
+        "\n",
+        "\n",
+        "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n",
+        "\n",
+        "\n",
+        "model = LogisticRegression(max_iter=200)\n",
+        "model.fit(X_train, y_train)\n",
+        "\n",
+        "\n",
+        "y_pred = model.predict(X_test)\n",
+        "accuracy = accuracy_score(y_test, y_pred)\n",
+        "\n",
+        "print(f\"Model Accuracy: {accuracy:.4f}\")"
+      ],
+      "metadata": {
+        "id": "uSQ2VhnTLNIp",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "1e275500-7c9c-4688-ee8a-23af7fdfbc3a"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Model Accuracy: 1.0000\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "6.write a python program to train logistic regression model using L2 regularization and print the model coefficiemts and accuracy"
+      ],
+      "metadata": {
+        "id": "RYL3qup-Ok2O"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.datasets import load_iris\n",
+        "from sklearn.linear_model import LogisticRegression\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.metrics import accuracy_score\n",
+        "\n",
+        "\n",
+        "iris = load_iris()\n",
+        "X, y = iris.data, iris.target\n",
+        "\n",
+        "\n",
+        "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n",
+        "\n",
+        "\n",
+        "model = LogisticRegression(penalty='l2', solver='lbfgs', multi_class='auto', max_iter=200)\n",
+        "model.fit(X_train, y_train)\n",
+        "\n",
+        "\n",
+        "y_pred = model.predict(X_test)\n",
+        "accuracy = accuracy_score(y_test, y_pred)\n",
+        "\n",
+        "print(\"Model Coefficients:\\n\", model.coef_)\n",
+        "print(\"\\nAccuracy:\", accuracy)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "uYcp5p2POkey",
+        "outputId": "5f6bb12f-dbe9-4a1a-8310-71b8910700f6"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Model Coefficients:\n",
+            " [[-0.39345607  0.96251768 -2.37512436 -0.99874594]\n",
+            " [ 0.50843279 -0.25482714 -0.21301129 -0.77574766]\n",
+            " [-0.11497673 -0.70769055  2.58813565  1.7744936 ]]\n",
+            "\n",
+            "Accuracy: 1.0\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "7.write a python program to train a logistic regression model for multiclass classification using multi_class ='ovr' and print the classigication report .\n"
+      ],
+      "metadata": {
+        "id": "aqUcQYjYO9V-"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.metrics import classification_report\n",
+        "\n",
+        "\n",
+        "ovr_model = LogisticRegression(multi_class='ovr', solver='lbfgs', max_iter=200)\n",
+        "ovr_model.fit(X_train, y_train)\n",
+        "\n",
+        "\n",
+        "y_pred_ovr = ovr_model.predict(X_test)\n",
+        "\n",
+        "\n",
+        "print(classification_report(y_test, y_pred_ovr, target_names=iris.target_names))"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "tmJOeew5O8Tn",
+        "outputId": "747e0422-6387-4b57-cfd6-cd6c1ce66885"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "              precision    recall  f1-score   support\n",
+            "\n",
+            "      setosa       1.00      1.00      1.00        10\n",
+            "  versicolor       1.00      0.89      0.94         9\n",
+            "   virginica       0.92      1.00      0.96        11\n",
+            "\n",
+            "    accuracy                           0.97        30\n",
+            "   macro avg       0.97      0.96      0.97        30\n",
+            "weighted avg       0.97      0.97      0.97        30\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "8.write a python program to apply Gridsearch cv and penalty hyperparameters for logistic regression and print the best parameters and validation accuracy"
+      ],
+      "metadata": {
+        "id": "sh2j65__Paot"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "from sklearn.datasets import load_iris\n",
+        "from sklearn.linear_model import LogisticRegression\n",
+        "from sklearn.model_selection import GridSearchCV\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "\n",
+        "\n",
+        "iris = load_iris()\n",
+        "X = iris.data\n",
+        "y = iris.target\n",
+        "\n",
+        "\n",
+        "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)\n",
+        "\n",
+        "\n",
+        "logistic_regression_model = LogisticRegression(solver='liblinear', max_iter=1000)\n",
+        "\n",
+        "\n",
+        "param_grid = {\n",
+        "    'C': [0.001, 0.01, 0.1, 1, 10, 100],\n",
+        "        'penalty': ['l1', 'l2']\n",
+        "        }\n",
+        "\n",
+        "\n",
+        "        grid_search = GridSearchCV(logistic_regression_model, param_grid, cv=5, scoring='accuracy', n_jobs= -1)\n",
+        "\n",
+        "\n",
+        "        grid_search.fit(X_train, y_train)\n",
+        "\n",
+        "\n",
+        "        print(\"Best parameters found: \", grid_search.best_params_)\n",
+        "        print(\"Best validation accuracy: {:.4f}\".format(grid_search.best_score_))\n",
+        "\n",
+        "\n",
+        "        best_model = grid_search.best_estimator_\n",
+        "        test_accuracy = best_model.score(X_test, y_test)\n",
+        "        print(\"Test set accuracy with best parameters: {:.4f}\".format(test_accuracy))"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 124
+        },
+        "id": "a8xnrjWVUExA",
+        "outputId": "812f3eee-4348-46f6-829a-9ea836290343"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "IndentationError",
+          "evalue": "unexpected indent (ipython-input-1634169796.py, line 25)",
+          "traceback": [
+            "\u001b[0;36m  File \u001b[0;32m\"/tmp/ipython-input-1634169796.py\"\u001b[0;36m, line \u001b[0;32m25\u001b[0m\n\u001b[0;31m    grid_search = GridSearchCV(logistic_regression_model, param_grid, cv=5, scoring='accuracy', n_jobs= -1)\u001b[0m\n\u001b[0m    ^\u001b[0m\n\u001b[0;31mIndentationError\u001b[0m\u001b[0;31m:\u001b[0m unexpected indent\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "9.write a python program to standardize the features before training logistic regression and compare the models accuracy with or without scaling."
+      ],
+      "metadata": {
+        "id": "lMk5tfj5PzLb"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.datasets import load_iris\n",
+        "from sklearn.linear_model import LogisticRegression\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.preprocessing import StandardScaler\n",
+        "from sklearn.metrics import accuracy_score\n",
+        "\n",
+        "\n",
+        "iris = load_iris()\n",
+        "X, y = iris.data, iris.target\n",
+        "\n",
+        "\n",
+        "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n",
+        "\n",
+        "\n",
+        "model_no_scaling = LogisticRegression(max_iter=200)\n",
+        "model_no_scaling.fit(X_train, y_train)\n",
+        "acc_no_scaling = accuracy_score(y_test, model_no_scaling.predict(X_test))\n",
+        "\n",
+        "\n",
+        "scaler = StandardScaler()\n",
+        "X_train_scaled = scaler.fit_transform(X_train)\n",
+        "X_test_scaled = scaler.transform(X_test)\n",
+        "\n",
+        "\n",
+        "model_with_scaling = LogisticRegression(max_iter=200)\n",
+        "model_with_scaling.fit(X_train_scaled, y_train)\n",
+        "acc_with_scaling = accuracy_score(y_test, model_with_scaling.predict(X_test_scaled))\n",
+        "\n",
+        "print(\"Accuracy without scaling:\", acc_no_scaling)\n",
+        "print(\"Accuracy with scaling:\", acc_with_scaling)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "Vovf7oGhPyzt",
+        "outputId": "1e7dede1-39db-4d7f-e2e2-6d824469e6d3"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Accuracy without scaling: 1.0\n",
+            "Accuracy with scaling: 1.0\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "10.imagin you are working at an e-comerce compqny that wants to predivt which customers will resopnd to marketing camping."
+      ],
+      "metadata": {
+        "id": "MRj4El6pQItd"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.datasets import make_classification\n",
+        "from sklearn.linear_model import LogisticRegression\n",
+        "from sklearn.model_selection import train_test_split, GridSearchCV\n",
+        "from sklearn.preprocessing import StandardScaler\n",
+        "from sklearn.metrics import classification_report\n",
+        "\n",
+        "\n",
+        "X, y = make_classification(\n",
+        "    n_samples=1000,\n",
+        "        n_features=8,\n",
+        "            n_informative=5,\n",
+        "                n_redundant=2,\n",
+        "                    n_classes=3,\n",
+        "                        random_state=42\n",
+        "                        )\n",
+        "\n",
+        "\n",
+        "                        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n",
+        "\n",
+        "\n",
+        "                        scaler = StandardScaler()\n",
+        "                        X_train_scaled = scaler.fit_transform(X_train)\n",
+        "                        X_test_scaled = scaler.transform(X_test)\n",
+        "\n",
+        "\n",
+        "                        param_grid = {\n",
+        "                            'C': [0.01, 0.1, 1, 10],\n",
+        "                                'penalty': ['l1', 'l2'],\n",
+        "                                    'solver': ['liblinear']\n",
+        "                                    }\n",
+        "\n",
+        "                                    grid = GridSearchCV(LogisticRegression(max_iter=1000), param_grid, cv=5) # Added max_iter for LogisticRegression\n",
+        "                                    grid.fit(X_train_scaled, y_train)\n",
+        "\n",
+        "\n",
+        "                                    best_model = grid.best_estimator_\n",
+        "\n",
+        "\n",
+        "                                    y_pred = best_model.predict(X_test_scaled)\n",
+        "\n",
+        "\n",
+        "                                    print(\"Best Parameters:\", grid.best_params_)\n",
+        "                                    print(\"\\nClassification Report: \\n\", classification_report(y_test, y_pred))"
+      ],
+      "metadata": {
+        "id": "w5-IC0ywTXE6"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ],
+  "metadata": {
+    "colab": {
+      "provenance": []
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "name": "python3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
